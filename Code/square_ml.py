@@ -1,0 +1,165 @@
+#square function and heaviside with loop tests
+from keras.models import Sequential,clone_model
+from keras.layers import Dense,Activation
+from keras.optimizers import SGD
+from keras import backend
+import numpy as np
+import matplotlib.pyplot as plt
+
+#data creation
+"""
+#x**k
+data = np.array([np.random.random() for i in range(1000)])
+target = data**2
+"""
+#heaviside
+data = np.array([np.random.random()*2-1 for i in range(1000)])
+target =  np.zeros(1000)
+for i in range(1000) :
+    if data[i] < 0 :
+        target[i] = 0
+    else :
+        target[i] = 1
+
+
+"""
+#noise
+
+p=1
+eps = 1
+for i in range(1000) :
+    if np.random.random()<0.5 :
+        target[i]+= (np.random.random()-0.5)*eps
+"""
+
+data_t = data[:800]
+target_t = target[:800]
+data_v = data[800:]
+target_v = target[800:]
+
+
+
+
+"""
+#same structure as the x**2 model for n=1
+phi_square.add(Dense(2,activation='relu',input_dim=1))
+phi_square.add(Dense(4,activation='relu'))
+phi_square.add(Dense(2,activation='relu'))
+phi_square.add(Dense(1))
+phi_square.compile(optimizer='sgd',loss='mse',metrics=['mae'])
+
+"""
+"""
+#same structure as the x**2 model for n=3
+phi_square.add(Dense(4,activation='relu',input_dim=1))
+phi_square.add(Dense(10,activation='relu'))
+phi_square.add(Dense(8,activation='relu'))
+phi_square.add(Dense(6,activation='relu'))
+phi_square.add(Dense(4,activation='relu'))
+phi_square.add(Dense(1))
+phi_square.compile(optimizer='sgd',loss='mse',metrics=['mae'])
+"""
+
+"""
+#same structure as the x**2 model for n=4
+phi_square.add(Dense(5,activation='relu',input_dim=1))
+phi_square.add(Dense(13,activation='relu'))
+phi_square.add(Dense(11,activation='relu'))
+phi_square.add(Dense(9,activation='relu'))
+phi_square.add(Dense(7,activation='relu'))
+phi_square.add(Dense(5,activation='relu'))
+phi_square.add(Dense(1))
+"""
+
+learning_rate = 0.005
+decay_rate = 0
+momentum = 0.99
+sgd = SGD(lr=learning_rate, momentum=momentum, decay=decay_rate, nesterov=False)
+
+nb_ok = 0
+er = 0
+ermax = 0
+ermean = 0
+for k in range(1) :#to do mutiple tests change range and quote quote code lines for plot and unquote print lines at the end
+    print("tour",k)
+    phi_square = Sequential()
+    #same structure as the x**2 model for n=4
+    phi_square.add(Dense(5,activation='relu',input_dim=1))
+    phi_square.add(Dense(13,activation='relu'))
+    phi_square.add(Dense(11,activation='relu'))
+    phi_square.add(Dense(9,activation='relu'))
+    phi_square.add(Dense(7,activation='relu'))
+    phi_square.add(Dense(5,activation='relu'))
+    phi_square.add(Dense(1))
+    phi_square.compile(optimizer='RMSprop',loss='mse',metrics=['mae'])
+    """
+    weights = phi_square.get_weights()
+    
+    print("weights:",weights)
+    """
+    history = phi_square.fit(data_t,target_t,batch_size = 20,epochs = 120, validation_data = (data_v,target_v),verbose = 0)
+    history_dict = history.history
+    
+    loss_values = history_dict['loss']
+    val_loss_values = history_dict['val_loss']
+    mae_values = history_dict['mean_absolute_error']
+    val_mae_values = history_dict['val_mean_absolute_error']
+    epochs = range(1,len(loss_values)+1)
+    #"""
+    fig = plt.figure()
+    
+    ax1 = fig.add_subplot(311)
+    plt.plot(epochs,loss_values,'bo',label='Training loss')
+    plt.plot(epochs,val_loss_values,'b',label='Validation loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    ax2 = fig.add_subplot(312)
+    plt.plot(epochs,mae_values,'bo',label='Training mae')
+    plt.plot(epochs,val_mae_values,'b',label='Validation mae')
+    plt.xlabel('Epochs')
+    plt.ylabel('Mae')
+    plt.legend()
+    
+    ax3 = fig.add_subplot(313)
+    #"""
+    #linsp = np.linspace(0,1,1000) #for square function
+    linsp = np.linspace(-1,1,1000) #for heaviside
+    pred = phi_square.predict(linsp,batch_size = 1)
+    #y_target = linsp**2 #for square function
+    y_target = [a>0 for a in linsp] #for heaviside
+    #"""
+    plt.plot(linsp,y_target,label = 'y=x')
+    plt.plot(linsp,pred,label = 'prediction')
+    plt.legend()
+
+
+    plt.show()
+    #"""
+    Y_int = y_target[:-1]
+    X_int = pred[:-1]
+    Y_int2 = y_target[1:]
+    X_int2 = pred[1:]
+    erreur1 = sum([(x-y)**2 for x,y in zip(X_int,Y_int)])
+    erreur2 = sum([(x-y)**2 for x,y in zip(X_int2,Y_int2)])
+    erreur = (erreur1+erreur2)/(2*(len(linsp)-1)*(linsp[-1]-linsp[0]))
+    print("Erreur :",erreur)
+    E = np.abs(np.concatenate(pred)-y_target)
+    emax = np.amax(E)
+    emean = np.mean(E)
+    if emax>0.4 :
+        print("Erreur emax =",emax)
+    else :
+        print("ok")
+        nb_ok+=1
+        ermax+=emax
+        ermean+=emean
+        er+=erreur[0]
+    backend.clear_session()
+
+""""
+print("nombre de cas de convergence :",nb_ok)
+print("erreur :",er/nb_ok)
+print("erreur max moyenne :",ermax/nb_ok)
+print("erreur moyenne moyenne :",ermean/nb_ok)
+"""

@@ -1,0 +1,18 @@
+
+@article{ Kutyniok,
+       author = "Gitta Kutyniok,  Philipp Petersen, Mones Raslan, Reinhold Schneider",
+       title = "A Theoretical Analysis of Deep Neural Networks and Parametric PDEs",
+       %journal = "SIAM Fundamentals of Algorithms" ,
+       year = "2019" ,
+       }
+
+
+@incollection{ Simard,
+       author = "Patrice Simard \and Yann Le Cun \and John Denker \and Bernard Victorri",
+       booktitle = "Neural Networks: Tricks on the Trade",
+       title = "Transformation invariance in pattern recognition - tangent distance and tangent propagation",
+       pages = "239-274",
+       Edition = "1524",
+       publisher = "Springer-Verlag" ,
+       year = "1998",
+       }

@@ -1,0 +1,18 @@
+ 
+* 17/06 :
+  - lecture de Kutyniok
+  - installation de Tensorflow et Keras et familiarisation
+  - implémentation en Keras de la fonction identité en dimension 1 et 2
+  - début d'implémentation de la fonction carré (implémentation de g)
+ 
+* 18/06 :
+  - fin du codage du carré
+  - début de lecture du Chollet
+* 19/06 : 
+  - suite lecture Chollet
+  - loss et validation loss
+* 20/06 : 
+  - continuation lecture Chollet
+  - x2 en ml
+* 21/06 :
+  - tests sur x2,x3 et heaviside en ml
